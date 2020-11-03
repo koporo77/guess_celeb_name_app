@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private String html;
+    //    private String html;
     private List<String> imageUrlList;
     private List<String> titleUrlList;
 
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     Button btn3;
     Button btn4;
 
-    private ExecutorService backgroundThread = Executors.newFixedThreadPool(2);
+    private ExecutorService backgroundThread = Executors.newFixedThreadPool(1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,54 +43,33 @@ public class MainActivity extends AppCompatActivity {
         btn3 = findViewById(R.id.btn3);
         btn4 = findViewById(R.id.btn4);
 
-
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Callable<Void> callable = new Callable<Void>() {
-                    @Override
-                    public Void call() throws Exception {
-                        setResourceURL("https://www.cinemaqatar.com/");
-//                        setImageList();
-//                        imageView.setImageBitmap(imageBitmapList.get(0));
-
-                        return null;
-                    }
-                };
-                backgroundThread.submit(callable);
-            }
-        });
-
-
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Callable<Void> callable = new Callable<Void>() {
-                    @Override
-                    public Void call() throws Exception {
-                        setImageList();
-                        return null;
-                    }
-                };
-                backgroundThread.submit(callable);
-            }
-        });
-
-        btn3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageView.setImageBitmap(imageBitmapList.get(1));
-                Log.i("TAG", "setImage: " + imageBitmapList.get(1));
-            }
-        });
-
-
+        loading("https://www.cinemaqatar.com/");
 
     }
 
-    public void buttonClicked(View view) {
-        //if clicked btn's id is equal to answer button
+//    public void buttonClicked(View view) {
+//        switch (view.getId()) {
+//            case R.id.btn1:
+//
+//         }
+//    }
+
+    private void loading(String url) {
+        Callable<Void> callable = new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                setResourceURL(url);
+                setImageList();
+                imageView.setImageBitmap(imageBitmapList.get(0));
+                return null;
+            }
+
+        };
+        backgroundThread.submit(callable);
+
     }
+
+
 
     private void setResourceURL(String url) {
         HtmlResource htmlResource = new HtmlResource(url);
@@ -112,24 +91,16 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 }
-
-
-
-
-
-
 
 
 //    private void setNameList() {
 //        CelebrityName celebrityName = new CelebrityName(html);
 //        celebrityName.getNameList();
 //    }
-
-
-
 
 
 //                Callable<Void> callable = new Callable<Void>() {
@@ -142,8 +113,7 @@ public class MainActivity extends AppCompatActivity {
 //                backgroundThread.submit(callable);
 
 
-
-                //                setHtml("https://www.instagram.com/little.reislin/");
+//                setHtml("https://www.instagram.com/little.reislin/");
 ////                setImageList();
 ////                setNameList();
 ////
