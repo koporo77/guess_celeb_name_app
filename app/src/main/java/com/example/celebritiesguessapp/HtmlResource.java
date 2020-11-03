@@ -4,6 +4,11 @@ package com.example.celebritiesguessapp;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -19,8 +24,8 @@ import java.util.concurrent.Future;
 
 public class HtmlResource {
 
-    private static final int threadNum = 1;
-    private ExecutorService threads = Executors.newFixedThreadPool(threadNum);
+    private ExecutorService backgroundThread = Executors.newFixedThreadPool(1);
+
 
     private String input;
 
@@ -28,48 +33,64 @@ public class HtmlResource {
         this.input = input;
     }
 
-    public String getHtml() throws ExecutionException, InterruptedException {
+    public String getHtml() {
         Callable<String> callable = new Callable<String>() {
             @Override
             public String call() throws Exception {
-                return getHtmlFromInternet();
+                return getHtmlResource();
             }
         };
-        Future<String> future = threads.submit(callable);
 
-        Log.i("TAG", "html result: " + future.get());
-        return future.get();
-    }
-
-    private String getHtmlFromInternet() {
-
+        Future<String> future = backgroundThread.submit(callable);
         try {
-            String result = "";
-
-            URL url = new URL(input);
-
-            URLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            InputStream inputStream = urlConnection.getInputStream();
-            InputStreamReader reader = new InputStreamReader(inputStream);
-            int data = reader.read();
-
-            while (data != -1) {
-                char current = (char) data;
-                result += current;
-                data = reader.read();
-            }
-
+            String result = future.get();
             return result;
-
-
         } catch (Exception e) {
             e.printStackTrace();
-            return "Failed";
+            return "failed";
         }
-
     }
 
 
+    private String getHtmlResource() {
 
+
+        try {
+            Document document = Jsoup.connect(input).get();
+            Log.i("TAG", "getHtml: " + document);
+            Log.i("TAG", "getHtml: " + document.html());
+
+            return document.html();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "failed";
+        }
+
+
+//        try {
+//            String result = "";
+//
+//            URL url = new URL(input);
+//
+//            URLConnection urlConnection = (HttpURLConnection) url.openConnection();
+//            InputStream inputStream = urlConnection.getInputStream();
+//            InputStreamReader reader = new InputStreamReader(inputStream);
+//            int data = reader.read();
+//
+//            while (data != -1) {
+//                char current = (char) data;
+//                result += current;
+//                data = reader.read();
+//            }
+//
+//            return result;
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "Failed";
+//        }
+
+    }
 
 }

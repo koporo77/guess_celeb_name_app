@@ -60,6 +60,16 @@ public class MainActivity extends AppCompatActivity {
         //if clicked btn's id is equal to answer button
     }
 
+    private void setHtml(String url) {
+        HtmlResource htmlResource = new HtmlResource(url);
+
+        try {
+            html = htmlResource.getHtml();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setImageList() {
         CelebrityImage celebrityImage = new CelebrityImage(html);
         try {
@@ -74,15 +84,7 @@ public class MainActivity extends AppCompatActivity {
         celebrityName.getNameList();
     }
 
-    private void setHtml(String url) {
-        HtmlResource htmlResource = new HtmlResource(url);
 
-        try {
-            html = htmlResource.getHtml();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
 
