@@ -35,11 +35,11 @@ public class MainActivity extends AppCompatActivity {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setHtml("https://www.forbes.com/celebrities/");
+                setHtml("https://www.instagram.com/little.reislin/");
 //                setImageList();
 //                setNameList();
 //
-//                Log.i("checking", "html: " + html);
+                Log.i("checking", "html: " + html);
 //                Log.i("checking", "imageList: " + imageList);
 //                Log.i("checking", "nameList: " + nameList);
             }
