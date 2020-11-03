@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -33,41 +34,48 @@ public class HtmlResource {
         this.input = input;
     }
 
-    public String getHtml() {
-        Callable<String> callable = new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return getHtmlResource();
-            }
-        };
-
-        Future<String> future = backgroundThread.submit(callable);
-        try {
-            String result = future.get();
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "failed";
-        }
+    public List<List<String>> getHtml() {
+        return getHtmlResource();
     }
 
 
-    private String getHtmlResource() {
+    private List<List<String>> getHtmlResource() {
 
 
         try {
             Document document = Jsoup.connect(input).get();
-            Log.i("TAG", "getHtml: " + document);
-            Log.i("TAG", "getHtml: " + document.html());
+            Elements datas = document.select("span.thumbnail");
 
-            return document.html();
+            List<String> imageUrlList = new ArrayList<>();
+            List<String> titleUrlList = new ArrayList<>();
+            List<List<String>> list = new ArrayList<>();
+
+            for (int i = 0; i < datas.size(); i++) {
+                String imageURL  = datas.select("span.thumbnail")
+                        .select("img").eq(i).attr("src");
+                String titleURL = datas.select("h4.gridminfotitle")
+                        .select("span").eq(i).text();
+
+                imageUrlList.add(imageURL);
+                titleUrlList.add(titleURL);
+            }
+            Log.i("TAG", "titleList: " + titleUrlList);
+
+            list.add(imageUrlList);
+            list.add(titleUrlList);
+
+            return list;
+
         } catch (Exception e) {
             e.printStackTrace();
-            return "failed";
+            return null;
         }
+    }
+
+}
 
 
-//        try {
+// try {
 //            String result = "";
 //
 //            URL url = new URL(input);
@@ -90,7 +98,3 @@ public class HtmlResource {
 //            e.printStackTrace();
 //            return "Failed";
 //        }
-
-    }
-
-}
