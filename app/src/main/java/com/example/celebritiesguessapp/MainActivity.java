@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -18,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     //    private String html;
     private List<String> imageUrlList;
-    private List<String> titleUrlList;
+    private List<String> titleList;
 
     private List<Bitmap> imageBitmapList;
 
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             List<List<String>> imageAndTitleList = htmlResource.getHtml();
             imageUrlList = imageAndTitleList.get(0);
-            titleUrlList = imageAndTitleList.get(1);
+            titleList = imageAndTitleList.get(1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,6 +91,13 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    private void settingQuiz() {
+        SettingQuiz settingQuiz = new SettingQuiz(titleList, imageBitmapList);
+        List<Object> items = settingQuiz.getQuizItems();
+        List<String> nameList = (List<String>) items.get(0);
+        Bitmap correctImage = (Bitmap) items.get(1);
     }
 
 }
